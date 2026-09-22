@@ -1,0 +1,80 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const dateFmt = new Intl.DateTimeFormat("it-IT", { dateStyle: "long" });
+---
+
+<Base title="Blog — Marco Santagati" description="Articoli su dati, cinema e progetti personali.">
+	<a class="back" href="/">&larr; Torna all'hub</a>
+	<h1>Blog</h1>
+
+	{posts.length === 0 ? (
+		<p class="empty">Ancora nessun articolo qui: torna presto.</p>
+	) : (
+		<ul class="posts">
+			{posts.map((post) => (
+				<li>
+					<a href={`/blog/${post.id}`}>
+						<span class="post-date">{dateFmt.format(post.data.pubDate)}</span>
+						<h2>{post.data.title}</h2>
+						{post.data.description && <p>{post.data.description}</p>}
+					</a>
+				</li>
+			))}
+		</ul>
+	)}
+</Base>
+
+<style>
+	.back {
+		color: var(--text-secondary);
+		text-decoration: none;
+		font-size: 0.9rem;
+	}
+	.back:hover {
+		color: var(--text-primary);
+	}
+	h1 {
+		margin: 12px 0 24px;
+	}
+	.empty {
+		color: var(--text-muted);
+	}
+	.posts {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.posts a {
+		display: block;
+		text-decoration: none;
+		color: var(--text-primary);
+		background: var(--surface-1);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 18px 20px;
+	}
+	.posts a:hover {
+		border-color: var(--series-1);
+	}
+	.post-date {
+		color: var(--text-muted);
+		font-size: 0.8rem;
+	}
+	.posts h2 {
+		margin: 4px 0 6px;
+		font-size: 1.05rem;
+	}
+	.posts p {
+		color: var(--text-secondary);
+		font-size: 0.92rem;
+		margin: 0;
+	}
+</style>

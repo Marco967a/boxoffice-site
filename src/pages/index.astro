@@ -1,0 +1,124 @@
+---
+import Base from "../layouts/Base.astro";
+import data from "../data/boxoffice.json";
+
+const money = new Intl.NumberFormat("it-IT", {
+	style: "currency",
+	currency: data.currency,
+	maximumFractionDigits: 0,
+});
+const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
+---
+
+<Base title="Marco Santagati" description="Hub dei miei progetti: dati, codice e contenuti.">
+	<section class="hero">
+		<h1>Ciao, sono Marco.</h1>
+		<p>
+			Raccolgo e analizzo dati, e li trasformo in progetti che potete esplorare qui. Qui sotto trovate
+			i miei progetti, il blog e dove seguirmi altrove.
+		</p>
+	</section>
+
+	<section>
+		<h2>Progetti</h2>
+		<div class="tiles">
+			<a class="tile" href="/projects/boxoffice">
+				<span class="tile-kicker">Dati live</span>
+				<h3>Box Office IT</h3>
+				<p>Classifica e incassi del cinema italiano, aggiornati ogni settimana.</p>
+				<p class="tile-stat">{money.format(latestWeek.total_gross)} <span>ultimo weekend</span></p>
+			</a>
+		</div>
+	</section>
+
+	<section>
+		<h2>Blog</h2>
+		<p>
+			Articoli su dati, cinema e progetti personali. <a href="/blog">Vai al blog &rarr;</a>
+		</p>
+	</section>
+
+	<section>
+		<h2>Altrove</h2>
+		<div class="links">
+			<a href="https://marco967a.github.io/PortfolioSite/" target="_blank" rel="noopener">Portfolio &rarr;</a>
+			<a href="https://www.youtube.com/@SpacchiCinema96" target="_blank" rel="noopener">YouTube &rarr;</a>
+		</div>
+	</section>
+</Base>
+
+<style>
+	.hero {
+		margin: 12px 0 32px;
+	}
+	.hero h1 {
+		margin-bottom: 8px;
+	}
+	.hero p {
+		color: var(--text-secondary);
+		max-width: 60ch;
+	}
+	section {
+		margin: 32px 0;
+	}
+	h2 {
+		font-size: 1.1rem;
+		margin-bottom: 14px;
+	}
+	.tiles {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		gap: 16px;
+	}
+	.tile {
+		display: block;
+		background: var(--surface-1);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 20px;
+		text-decoration: none;
+		color: var(--text-primary);
+		transition: border-color 0.15s ease;
+	}
+	.tile:hover {
+		border-color: var(--series-1);
+	}
+	.tile-kicker {
+		display: inline-block;
+		font-size: 0.75rem;
+		color: var(--series-1);
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		margin-bottom: 6px;
+	}
+	.tile h3 {
+		margin: 0 0 6px;
+	}
+	.tile p {
+		color: var(--text-secondary);
+		font-size: 0.92rem;
+		margin: 0 0 10px;
+	}
+	.tile-stat {
+		font-variant-numeric: tabular-nums;
+		font-weight: 600;
+		color: var(--text-primary) !important;
+	}
+	.tile-stat span {
+		font-weight: 400;
+		color: var(--text-muted);
+		font-size: 0.8rem;
+	}
+	.links {
+		display: flex;
+		gap: 20px;
+	}
+	.links a {
+		color: var(--text-secondary);
+		text-decoration: none;
+	}
+	.links a:hover {
+		color: var(--series-1);
+	}
+</style>

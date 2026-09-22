@@ -1,0 +1,129 @@
+---
+import Base from "../../layouts/Base.astro";
+import TrendChart from "../../components/TrendChart.astro";
+import TopTitlesChart from "../../components/TopTitlesChart.astro";
+import data from "../../data/boxoffice.json";
+
+const money = new Intl.NumberFormat("it-IT", {
+	style: "currency",
+	currency: data.currency,
+	maximumFractionDigits: 0,
+});
+const dateFmt = new Intl.DateTimeFormat("it-IT", { day: "2-digit", month: "long", year: "numeric" });
+const generatedFmt = new Intl.DateTimeFormat("it-IT", { dateStyle: "medium", timeStyle: "short" });
+
+const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
+---
+
+<Base
+	title="Box Office IT — Marco Santagati"
+	description="Classifica e incassi del box office italiano, aggiornati settimanalmente."
+>
+	<a class="back" href="/">&larr; Torna all'hub</a>
+	<h1>Box Office IT</h1>
+	<p class="lede">
+		Classifica settimanale del box office italiano, raccolta dalla pipeline dati di questo progetto
+		e aggiornata ogni settimana.
+	</p>
+
+	{data.has_quality_warnings && (
+		<p class="badge warning">
+			<span aria-hidden="true">&#9888;</span> Dati con anomalie segnalate: alcuni numeri di questa
+			settimana potrebbero riflettere errori della fonte, non del calcolo.
+		</p>
+	)}
+
+	<section class="stat-tile">
+		<span class="stat-label">Incasso weekend — {dateFmt.format(new Date(data.latest_week))}</span>
+		<span class="stat-value">{money.format(latestWeek.total_gross)}</span>
+		<span class="stat-sub">{latestWeek.titles} titoli in classifica</span>
+	</section>
+
+	<section>
+		<h2>Andamento incassi</h2>
+		<TrendChart data={data.weekly_trend} currency={data.currency} />
+	</section>
+
+	<section>
+		<h2>Top titoli — ultima settimana</h2>
+		<TopTitlesChart data={data.top_titles} currency={data.currency} />
+	</section>
+
+	<section class="about">
+		<h2>Come leggere questi dati</h2>
+		<p>{data.note}</p>
+		<p class="meta">
+			Fonte: {data.source} · Territorio: {data.territory} · Ultimo aggiornamento:{" "}
+			{generatedFmt.format(new Date(data.generated_at))}
+		</p>
+	</section>
+</Base>
+
+<style>
+	.back {
+		color: var(--text-secondary);
+		text-decoration: none;
+		font-size: 0.9rem;
+	}
+	.back:hover {
+		color: var(--text-primary);
+	}
+	h1 {
+		margin: 12px 0 4px;
+	}
+	.lede {
+		color: var(--text-secondary);
+		max-width: 60ch;
+	}
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 14px;
+		border-radius: 999px;
+		font-size: 0.88rem;
+		margin: 8px 0 20px;
+	}
+	.badge.warning {
+		background: rgba(250, 178, 25, 0.14);
+		color: var(--text-primary);
+		border: 1px solid rgba(250, 178, 25, 0.4);
+	}
+	.stat-tile {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		background: var(--surface-1);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 20px;
+		margin: 20px 0 28px;
+	}
+	.stat-label {
+		color: var(--text-muted);
+		font-size: 0.85rem;
+	}
+	.stat-value {
+		font-size: 2.4rem;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+	.stat-sub {
+		color: var(--text-secondary);
+		font-size: 0.9rem;
+	}
+	section {
+		margin: 28px 0;
+	}
+	h2 {
+		font-size: 1.1rem;
+		margin-bottom: 12px;
+	}
+	.about p {
+		color: var(--text-secondary);
+	}
+	.about .meta {
+		color: var(--text-muted);
+		font-size: 0.85rem;
+	}
+</style>

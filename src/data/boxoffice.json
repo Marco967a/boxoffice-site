@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-09-22T19:31:28.975600+00:00",
+  "source": "comingsoon",
+  "territory": "IT",
+  "currency": "EUR",
+  "latest_week": "2026-09-17",
+  "has_quality_warnings": true,
+  "note": "Dati aggregati dal box office italiano (fonte: ComingSoon). Alcune settimane storiche possono mancare o presentare piccole anomalie di fonte.",
+  "weekly_trend": [
+    {
+      "week_start": "2026-09-17",
+      "total_gross": 6391944.0,
+      "titles": 20
+    }
+  ],
+  "top_titles": [
+    {
+      "rank": 1,
+      "title": "Resident Evil",
+      "weekly_gross": 1440852.0,
+      "screen_count": 345
+    },
+    {
+      "rank": 2,
+      "title": "Cars: Motori Ruggenti",
+      "weekly_gross": 834400.0,
+      "screen_count": 282
+    },
+    {
+      "rank": 3,
+      "title": "The Invite - Il Piacere è tutto nostro",
+      "weekly_gross": 560195.0,
+      "screen_count": 403
+    },
+    {
+      "rank": 4,
+      "title": "Coyote vs. Acme",
+      "weekly_gross": 50461.0,
+      "screen_count": 368
+    },
+    {
+      "rank": 5,
+      "title": "Odissea",
+      "weekly_gross": 482143.0,
+      "screen_count": 279
+    }
+  ]
+}

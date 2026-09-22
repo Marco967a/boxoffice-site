@@ -1,0 +1,142 @@
+---
+interface Title {
+	rank: number;
+	title: string;
+	weekly_gross: number;
+	screen_count: number | null;
+}
+interface Props {
+	data: Title[];
+	currency: string;
+}
+const { data, currency } = Astro.props;
+
+const money = new Intl.NumberFormat("it-IT", {
+	style: "currency",
+	currency,
+	maximumFractionDigits: 0,
+});
+const max = Math.max(...data.map((d) => d.weekly_gross), 1);
+---
+
+<figure class="viz-root">
+	<ul class="bars" role="img" aria-label="Incassi weekend dei primi titoli in classifica">
+		{data.map((d) => {
+			const pct = Math.max((d.weekly_gross / max) * 100, 3);
+			return (
+				<li>
+					<div class="row-label">
+						<span class="rank">#{d.rank}</span>
+						<span class="title">{d.title}</span>
+					</div>
+					<div class="track" title={`${d.title}: ${money.format(d.weekly_gross)}${d.screen_count ? ` · ${d.screen_count} sale` : ""}`}>
+						<div class="bar" style={`width: ${pct}%`}></div>
+						<span class="value">{money.format(d.weekly_gross)}</span>
+					</div>
+				</li>
+			);
+		})}
+	</ul>
+
+	<details class="table-toggle">
+		<summary>Vedi i dati in tabella</summary>
+		<table>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Titolo</th>
+					<th>Incasso weekend</th>
+					<th>Sale</th>
+				</tr>
+			</thead>
+			<tbody>
+				{data.map((d) => (
+					<tr>
+						<td>{d.rank}</td>
+						<td>{d.title}</td>
+						<td>{money.format(d.weekly_gross)}</td>
+						<td>{d.screen_count ?? "—"}</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</details>
+</figure>
+
+<style>
+	.viz-root {
+		margin: 0;
+		background: var(--surface-1);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		padding: 16px;
+	}
+	.bars {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.row-label {
+		display: flex;
+		gap: 8px;
+		align-items: baseline;
+		margin-bottom: 4px;
+	}
+	.rank {
+		color: var(--text-muted);
+		font-size: 0.8rem;
+		font-variant-numeric: tabular-nums;
+	}
+	.title {
+		color: var(--text-primary);
+		font-size: 0.92rem;
+	}
+	.track {
+		position: relative;
+		background: var(--page);
+		border-radius: 4px;
+		height: 22px;
+		overflow: hidden;
+	}
+	.bar {
+		height: 100%;
+		background: var(--series-1);
+		border-radius: 0 4px 4px 0;
+		min-width: 4px;
+	}
+	.value {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		font-size: 0.78rem;
+		color: var(--text-secondary);
+		font-variant-numeric: tabular-nums;
+	}
+	.table-toggle {
+		margin-top: 16px;
+		color: var(--text-secondary);
+		font-size: 0.9rem;
+	}
+	.table-toggle summary {
+		cursor: pointer;
+	}
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-top: 8px;
+		font-size: 0.85rem;
+	}
+	th, td {
+		text-align: left;
+		padding: 6px 8px;
+		border-bottom: 1px solid var(--gridline);
+	}
+	th {
+		color: var(--text-muted);
+		font-weight: 500;
+	}
+</style>
