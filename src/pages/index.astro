@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import TrendChart from "../components/TrendChart.astro";
 import data from "../data/boxoffice.json";
 
 const money = new Intl.NumberFormat("it-IT", {
@@ -7,49 +8,63 @@ const money = new Intl.NumberFormat("it-IT", {
 	currency: data.currency,
 	maximumFractionDigits: 0,
 });
+const dateFmt = new Intl.DateTimeFormat("it-IT", { day: "2-digit", month: "long", year: "numeric" });
 const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
 ---
 
-<Base title="Marco Santagati" description="Hub dei miei progetti: dati, codice e contenuti.">
+<Base title="Italian Box Office Monitoring">
 	<section class="hero">
-		<h1>Ciao, sono Marco.</h1>
+		<h1>Italian Box Office Monitoring</h1>
 		<p>
-			Raccolgo e analizzo dati, e li trasformo in progetti che potete esplorare qui. Qui sotto trovate
-			i miei progetti, il blog e dove seguirmi altrove.
+			Classifica e incassi del box office italiano, raccolti e aggiornati automaticamente ogni
+			settimana.
 		</p>
 	</section>
 
-	<section>
-		<h2>Progetti</h2>
-		<div class="tiles">
-			<a class="tile" href="/projects/boxoffice">
-				<span class="tile-kicker">Dati live</span>
-				<h3>Box Office IT</h3>
-				<p>Classifica e incassi del cinema italiano, aggiornati ogni settimana.</p>
-				<p class="tile-stat">{money.format(latestWeek.total_gross)} <span>ultimo weekend</span></p>
-			</a>
+	<section class="kpis">
+		<div class="stat-tile">
+			<span class="stat-label">Incasso weekend — {dateFmt.format(new Date(data.latest_week))}</span>
+			<span class="stat-value">{money.format(latestWeek.total_gross)}</span>
+			<span class="stat-sub">{latestWeek.titles} titoli in classifica</span>
+		</div>
+		<TrendChart data={data.weekly_trend} currency={data.currency} />
+	</section>
+
+	<section class="cta">
+		<h2>Esplora</h2>
+		<div class="buttons">
+			<a class="btn btn-accent" href="/projects/boxoffice">Classifica completa &rarr;</a>
+			<a class="btn btn-sage" href="/blog">Blog &rarr;</a>
+			<a class="btn" href="https://www.youtube.com/@SpacchiCinema96" target="_blank" rel="noopener">Canale YouTube &rarr;</a>
+			<a class="btn" href="https://github.com/Marco967a/boxoffice-site" target="_blank" rel="noopener">Codice sorgente &rarr;</a>
 		</div>
 	</section>
 
-	<section>
-		<h2>Blog</h2>
-		<p>
-			Articoli su dati, cinema e progetti personali. <a href="/blog">Vai al blog &rarr;</a>
-		</p>
-	</section>
-
-	<section>
-		<h2>Altrove</h2>
-		<div class="links">
-			<a href="https://marco967a.github.io/PortfolioSite/" target="_blank" rel="noopener">Portfolio &rarr;</a>
-			<a href="https://www.youtube.com/@SpacchiCinema96" target="_blank" rel="noopener">YouTube &rarr;</a>
-		</div>
+	<section class="about">
+		<h2>Risorse e aspetti tecnici</h2>
+		<ul class="about-list">
+			<li>
+				<strong>Fonte dati:</strong> classifiche e incassi raccolti da
+				<a href="https://www.comingsoon.it/" target="_blank" rel="noopener">ComingSoon.it</a>,
+				territorio Italia, valuta EUR.
+			</li>
+			<li>
+				<strong>Pipeline:</strong> i dati sono estratti e pubblicati automaticamente ogni settimana dal
+				progetto
+				<a href="https://github.com/Marco967a/NewBoxofficeProject" target="_blank" rel="noopener">NewBoxofficeProject</a>,
+				che genera il file <code>boxoffice.json</code> consumato da questo sito.
+			</li>
+			<li>
+				<strong>Sito:</strong> costruito con <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>,
+				statico e senza backend: nessun database, nessun server applicativo.
+			</li>
+		</ul>
 	</section>
 </Base>
 
 <style>
 	.hero {
-		margin: 12px 0 32px;
+		margin: 12px 0 28px;
 	}
 	.hero h1 {
 		margin-bottom: 8px;
@@ -65,60 +80,103 @@ const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
 		font-size: 1.1rem;
 		margin-bottom: 14px;
 	}
-	.tiles {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	.kpis {
+		display: flex;
+		flex-direction: column;
 		gap: 16px;
 	}
-	.tile {
-		display: block;
+	.stat-tile {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		background: var(--surface-1);
+		border: 1px solid var(--border);
+		border-left: 3px solid var(--sage);
+		border-radius: 12px;
+		padding: 20px;
+	}
+	.stat-label {
+		color: var(--text-muted);
+		font-size: 0.85rem;
+	}
+	.stat-value {
+		font-size: 2.4rem;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+		color: var(--accent);
+	}
+	.stat-sub {
+		color: var(--text-secondary);
+		font-size: 0.9rem;
+	}
+	.buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+	.btn {
+		display: inline-block;
+		padding: 10px 18px;
+		border-radius: 999px;
+		text-decoration: none;
+		font-size: 0.92rem;
+		font-weight: 600;
+		border: 1px solid var(--border);
+		color: var(--text-primary);
+		background: var(--surface-1);
+		transition: border-color 0.15s ease, transform 0.1s ease;
+	}
+	.btn:hover {
+		transform: translateY(-1px);
+	}
+	.btn-accent {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: #fff;
+	}
+	.btn-accent:hover {
+		background: var(--accent-strong);
+		border-color: var(--accent-strong);
+	}
+	.btn-sage {
+		background: var(--sage);
+		border-color: var(--sage);
+		color: #fff;
+	}
+	.btn-sage:hover {
+		background: var(--sage-strong);
+		border-color: var(--sage-strong);
+	}
+	.about-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.about-list li {
 		background: var(--surface-1);
 		border: 1px solid var(--border);
 		border-radius: 12px;
-		padding: 20px;
-		text-decoration: none;
-		color: var(--text-primary);
-		transition: border-color 0.15s ease;
-	}
-	.tile:hover {
-		border-color: var(--series-1);
-	}
-	.tile-kicker {
-		display: inline-block;
-		font-size: 0.75rem;
-		color: var(--series-1);
-		font-weight: 600;
-		letter-spacing: 0.02em;
-		text-transform: uppercase;
-		margin-bottom: 6px;
-	}
-	.tile h3 {
-		margin: 0 0 6px;
-	}
-	.tile p {
+		padding: 14px 18px;
 		color: var(--text-secondary);
 		font-size: 0.92rem;
-		margin: 0 0 10px;
 	}
-	.tile-stat {
-		font-variant-numeric: tabular-nums;
-		font-weight: 600;
-		color: var(--text-primary) !important;
+	.about-list strong {
+		color: var(--text-primary);
 	}
-	.tile-stat span {
-		font-weight: 400;
-		color: var(--text-muted);
-		font-size: 0.8rem;
-	}
-	.links {
-		display: flex;
-		gap: 20px;
-	}
-	.links a {
-		color: var(--text-secondary);
+	.about-list a {
+		color: var(--accent);
 		text-decoration: none;
 	}
-	.links a:hover {
-		color: var(--series-1);
+	.about-list a:hover {
+		text-decoration: underline;
+	}
+	.about-list code {
+		background: var(--page);
+		padding: 1px 6px;
+		border-radius: 4px;
+		font-size: 0.88em;
 	}
 </style>
