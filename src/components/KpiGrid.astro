@@ -1,0 +1,197 @@
+---
+import { computeMetrics, type BoxOfficeData } from "../lib/metrics";
+
+interface Props {
+	data: BoxOfficeData;
+	/** "compact": incasso + 3 metriche (home). "full": tutte le metriche (dashboard). */
+	variant?: "compact" | "full";
+}
+const { data, variant = "full" } = Astro.props;
+const m = computeMetrics(data);
+
+const money = new Intl.NumberFormat("it-IT", { style: "currency", currency: data.currency, maximumFractionDigits: 0 });
+const int = new Intl.NumberFormat("it-IT");
+const pct = new Intl.NumberFormat("it-IT", { style: "percent", maximumFractionDigits: 1 });
+const signedPct = new Intl.NumberFormat("it-IT", { style: "percent", maximumFractionDigits: 1, signDisplay: "exceptZero" });
+const dateFmt = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", year: "numeric" });
+
+const secondary = [
+	{
+		label: "Titoli in classifica",
+		value: int.format(m.titles),
+		sub: `${money.format(m.avgPerTitle)} di media a titolo`,
+	},
+	{
+		label: `Quota della top ${m.topCount}`,
+		value: pct.format(m.topShare),
+		sub: "dell'incasso totale del weekend",
+		bar: m.topShare,
+	},
+	m.leader && {
+		label: "Leader del weekend",
+		value: m.leader.title,
+		sub: `${pct.format(m.leaderShare ?? 0)} dell'incasso${m.leaderGap ? ` · +${money.format(m.leaderGap)} sul #2` : ""}`,
+		small: true,
+	},
+	m.bestPerScreen && {
+		label: "Media per sala (migliore)",
+		value: money.format(m.bestPerScreen.avg),
+		sub: `${m.bestPerScreen.title} · ${int.format(m.bestPerScreen.screen_count ?? 0)} sale`,
+	},
+	variant === "full" && {
+		label: `Sale della top ${m.topCount}`,
+		value: int.format(m.topScreens),
+		sub: "schermi complessivi",
+	},
+	variant === "full" && m.wowPct !== null && {
+		label: "Variazione sulla settimana prima",
+		value: signedPct.format(m.wowPct),
+		sub: "incasso totale del weekend",
+		trend: m.wowPct >= 0 ? "up" : "down",
+	},
+].filter(Boolean) as {
+	label: string;
+	value: string;
+	sub: string;
+	bar?: number;
+	small?: boolean;
+	trend?: "up" | "down";
+}[];
+const shown = variant === "compact" ? secondary.slice(0, 3) : secondary;
+---
+
+<div class="kpi-grid">
+	<div class="hero-tile">
+		<span class="label">Incasso totale weekend</span>
+		<span class="value">{money.format(m.total)}</span>
+		<span class="sub">
+			{dateFmt.format(new Date(data.latest_week))}
+			{m.wowPct !== null && (
+				<span class:list={["delta", m.wowPct >= 0 ? "up" : "down"]}>
+					{m.wowPct >= 0 ? "▲" : "▼"} {signedPct.format(m.wowPct)} vs settimana prima
+				</span>
+			)}
+		</span>
+	</div>
+
+	<dl class="tiles">
+		{shown.map((k) => (
+			<div class="tile">
+				<dt class="label">{k.label}</dt>
+				<dd class:list={["value", { small: k.small }, k.trend]}>{k.value}</dd>
+				<dd class="sub">{k.sub}</dd>
+				{k.bar !== undefined && (
+					<div class="meter" role="presentation"><span style={`width:${Math.round(k.bar * 100)}%`}></span></div>
+				)}
+			</div>
+		))}
+	</dl>
+
+	{!m.sortedOk && variant === "full" && (
+		<p class="anomaly">
+			<span aria-hidden="true">&#9888;</span> La classifica non è in ordine decrescente di incasso: la
+			fonte ha probabilmente un valore errato, quindi quota e medie potrebbero essere imprecise.
+		</p>
+	)}
+</div>
+
+<style>
+	.kpi-grid {
+		display: grid;
+		gap: 12px;
+	}
+	.hero-tile {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 24px 24px 22px;
+		border-radius: 16px;
+		background: var(--surface-1);
+		border: 1px solid var(--border);
+		border-top: 4px solid var(--accent);
+	}
+	.label {
+		color: var(--text-muted);
+		font-size: 0.78rem;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+	.hero-tile .value {
+		font-size: clamp(2.4rem, 8vw, 3.6rem);
+		font-weight: 700;
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+		font-variant-numeric: tabular-nums;
+		color: var(--accent);
+	}
+	.sub {
+		color: var(--text-secondary);
+		font-size: 0.9rem;
+	}
+	.delta {
+		display: inline-block;
+		margin-left: 10px;
+		padding: 1px 9px;
+		border-radius: 999px;
+		font-size: 0.8rem;
+		font-weight: 600;
+	}
+	.delta.up { background: var(--sage-soft); color: var(--sage-strong); }
+	.delta.down { background: var(--accent-soft); color: var(--accent-strong); }
+
+	.tiles {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+		gap: 12px;
+		margin: 0;
+	}
+	.tile {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+		padding: 16px 18px;
+		border-radius: 12px;
+		background: var(--surface-1);
+		border: 1px solid var(--border);
+		border-left: 3px solid var(--sage);
+	}
+	.tile dd { margin: 0; }
+	.tile .value {
+		font-size: 1.7rem;
+		font-weight: 650;
+		font-variant-numeric: tabular-nums;
+		color: var(--text-primary);
+		line-height: 1.2;
+	}
+	.tile .value.small {
+		font-size: 1.15rem;
+		line-height: 1.35;
+		padding: 5px 0;
+	}
+	.tile .value.up { color: var(--sage-strong); }
+	.tile .value.down { color: var(--accent-strong); }
+	.tile .sub { font-size: 0.82rem; }
+	.meter {
+		height: 6px;
+		margin-top: 8px;
+		border-radius: 999px;
+		background: var(--gridline);
+		overflow: hidden;
+	}
+	.meter span {
+		display: block;
+		height: 100%;
+		background: var(--sage);
+		border-radius: 999px;
+	}
+	.anomaly {
+		margin: 0;
+		padding: 10px 14px;
+		border-radius: 10px;
+		font-size: 0.85rem;
+		color: var(--text-secondary);
+		background: rgba(250, 178, 25, 0.12);
+		border: 1px solid rgba(250, 178, 25, 0.35);
+	}
+</style>

@@ -1,18 +1,12 @@
 ---
 import Base from "../../layouts/Base.astro";
 import TrendChart from "../../components/TrendChart.astro";
+import KpiGrid from "../../components/KpiGrid.astro";
 import TopTitlesChart from "../../components/TopTitlesChart.astro";
 import data from "../../data/boxoffice.json";
 
-const money = new Intl.NumberFormat("it-IT", {
-	style: "currency",
-	currency: data.currency,
-	maximumFractionDigits: 0,
-});
-const dateFmt = new Intl.DateTimeFormat("it-IT", { day: "2-digit", month: "long", year: "numeric" });
 const generatedFmt = new Intl.DateTimeFormat("it-IT", { dateStyle: "medium", timeStyle: "short" });
 
-const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
 ---
 
 <Base
@@ -33,10 +27,8 @@ const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
 		</p>
 	)}
 
-	<section class="stat-tile">
-		<span class="stat-label">Incasso weekend — {dateFmt.format(new Date(data.latest_week))}</span>
-		<span class="stat-value">{money.format(latestWeek.total_gross)}</span>
-		<span class="stat-sub">{latestWeek.titles} titoli in classifica</span>
+	<section class="kpis">
+		<KpiGrid data={data} />
 	</section>
 
 	<section>
@@ -89,30 +81,8 @@ const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
 		color: var(--text-primary);
 		border: 1px solid rgba(250, 178, 25, 0.4);
 	}
-	.stat-tile {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-		background: var(--surface-1);
-		border: 1px solid var(--border);
-		border-left: 3px solid var(--sage);
-		border-radius: 12px;
-		padding: 20px;
-		margin: 20px 0 28px;
-	}
-	.stat-label {
-		color: var(--text-muted);
-		font-size: 0.85rem;
-	}
-	.stat-value {
-		font-size: 2.4rem;
-		font-weight: 600;
-		font-variant-numeric: tabular-nums;
-		color: var(--accent);
-	}
-	.stat-sub {
-		color: var(--text-secondary);
-		font-size: 0.9rem;
+	.kpis {
+		margin: 20px 0 8px;
 	}
 	section {
 		margin: 28px 0;

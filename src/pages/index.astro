@@ -1,15 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import TrendChart from "../components/TrendChart.astro";
+import KpiGrid from "../components/KpiGrid.astro";
 import data from "../data/boxoffice.json";
-
-const money = new Intl.NumberFormat("it-IT", {
-	style: "currency",
-	currency: data.currency,
-	maximumFractionDigits: 0,
-});
-const dateFmt = new Intl.DateTimeFormat("it-IT", { day: "2-digit", month: "long", year: "numeric" });
-const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
 ---
 
 <Base title="Italian Box Office Monitoring">
@@ -22,12 +15,9 @@ const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
 	</section>
 
 	<section class="kpis">
-		<div class="stat-tile">
-			<span class="stat-label">Incasso weekend — {dateFmt.format(new Date(data.latest_week))}</span>
-			<span class="stat-value">{money.format(latestWeek.total_gross)}</span>
-			<span class="stat-sub">{latestWeek.titles} titoli in classifica</span>
-		</div>
+		<KpiGrid data={data} variant="compact" />
 		<TrendChart data={data.weekly_trend} currency={data.currency} />
+		<a class="more" href="/projects/boxoffice">Tutte le metriche e la classifica completa &rarr;</a>
 	</section>
 
 	<section class="cta">
@@ -83,32 +73,16 @@ const latestWeek = data.weekly_trend[data.weekly_trend.length - 1];
 	.kpis {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 14px;
 	}
-	.stat-tile {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-		background: var(--surface-1);
-		border: 1px solid var(--border);
-		border-left: 3px solid var(--sage);
-		border-radius: 12px;
-		padding: 20px;
-	}
-	.stat-label {
-		color: var(--text-muted);
-		font-size: 0.85rem;
-	}
-	.stat-value {
-		font-size: 2.4rem;
-		font-weight: 600;
-		font-variant-numeric: tabular-nums;
+	.more {
+		align-self: flex-end;
 		color: var(--accent);
-	}
-	.stat-sub {
-		color: var(--text-secondary);
+		text-decoration: none;
 		font-size: 0.9rem;
+		font-weight: 600;
 	}
+	.more:hover { text-decoration: underline; }
 	.buttons {
 		display: flex;
 		flex-wrap: wrap;
