@@ -40,10 +40,6 @@ const ogImage = Astro.site ? new URL("/og-image.png", Astro.site).href : undefin
 		{ogImage && <meta property="og:image:width" content="1200" />}
 		{ogImage && <meta property="og:image:height" content="630" />}
 		{ogImage && <meta property="og:image:alt" content="Italian Box Office Monitoring: classifica e incassi del box office italiano" />}
-		<meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		{ogImage && <meta name="twitter:image" content={ogImage} />}
 		<!-- Applica il tema scelto prima del primo render, per evitare il flash -->
 		<script is:inline>
 			try {
