@@ -2,16 +2,22 @@
 import Base from "../layouts/Base.astro";
 import TrendChart from "../components/TrendChart.astro";
 import KpiGrid from "../components/KpiGrid.astro";
+import SocialLinks from "../components/SocialLinks.astro";
 import data from "../data/boxoffice.json";
+
+const dateFmt = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", year: "numeric" });
+const updatedOn = dateFmt.format(new Date(data.latest_week));
 ---
 
 <Base title="Italian Box Office Monitoring">
 	<section class="hero">
+		<p class="updated"><span class="dot" aria-hidden="true"></span>Aggiornato alla settimana del {updatedOn}</p>
 		<h1>Italian Box Office Monitoring</h1>
-		<p>
+		<p class="lede">
 			Classifica e incassi del box office italiano, raccolti e aggiornati automaticamente ogni
 			settimana.
 		</p>
+		<a class="btn btn-accent hero-cta" href="/projects/boxoffice">Classifica completa &rarr;</a>
 	</section>
 
 	<section class="kpis">
@@ -25,8 +31,7 @@ import data from "../data/boxoffice.json";
 		<div class="buttons">
 			<a class="btn btn-accent" href="/projects/boxoffice">Classifica completa &rarr;</a>
 			<a class="btn btn-sage" href="/blog">Blog &rarr;</a>
-			<a class="btn" href="https://www.youtube.com/@SpacchiCinema96" target="_blank" rel="noopener">Canale YouTube &rarr;</a>
-			<a class="btn" href="https://github.com/Marco967a/boxoffice-site" target="_blank" rel="noopener">Codice sorgente &rarr;</a>
+			<SocialLinks variant="button" />
 		</div>
 	</section>
 
@@ -34,18 +39,18 @@ import data from "../data/boxoffice.json";
 		<h2>Risorse e aspetti tecnici</h2>
 		<ul class="about-list">
 			<li>
-				<strong>Fonte dati:</strong> classifiche e incassi raccolti da
+				<strong>Fonte dati</strong> classifiche e incassi raccolti da{" "}
 				<a href="https://www.comingsoon.it/" target="_blank" rel="noopener">ComingSoon.it</a>,
 				territorio Italia, valuta EUR.
 			</li>
 			<li>
-				<strong>Pipeline:</strong> i dati sono estratti e pubblicati automaticamente ogni settimana dal
-				progetto
+				<strong>Pipeline</strong> i dati sono estratti e pubblicati automaticamente ogni settimana dal
+				progetto{" "}
 				<a href="https://github.com/Marco967a/NewBoxofficeProject" target="_blank" rel="noopener">NewBoxofficeProject</a>,
 				che genera il file <code>boxoffice.json</code> consumato da questo sito.
 			</li>
 			<li>
-				<strong>Sito:</strong> costruito con <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>,
+				<strong>Sito</strong> costruito con <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>,
 				statico e senza backend: nessun database, nessun server applicativo.
 			</li>
 		</ul>
@@ -57,17 +62,36 @@ import data from "../data/boxoffice.json";
 		margin: 12px 0 28px;
 	}
 	.hero h1 {
-		margin-bottom: 8px;
+		margin: 10px 0 12px;
 	}
-	.hero p {
+	.updated {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0;
+		padding: 4px 12px;
+		border-radius: 999px;
+		background: var(--sage-soft);
+		color: var(--sage-strong);
+		font-size: 0.82rem;
+		font-weight: 600;
+	}
+	.dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--sage-strong);
+	}
+	.lede {
+		margin: 0 0 20px;
 		color: var(--text-secondary);
+		font-size: 1.05rem;
 		max-width: 60ch;
 	}
 	section {
 		margin: 32px 0;
 	}
 	h2 {
-		font-size: 1.1rem;
 		margin-bottom: 14px;
 	}
 	.kpis {
@@ -90,10 +114,10 @@ import data from "../data/boxoffice.json";
 	}
 	.btn {
 		display: inline-block;
-		padding: 10px 18px;
+		padding: 10px 20px;
 		border-radius: 999px;
 		text-decoration: none;
-		font-size: 0.92rem;
+		font-size: 0.95rem;
 		font-weight: 600;
 		border: 1px solid var(--border);
 		color: var(--text-primary);
@@ -102,6 +126,10 @@ import data from "../data/boxoffice.json";
 	}
 	.btn:hover {
 		transform: translateY(-1px);
+	}
+	.btn:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
 	}
 	.btn-accent {
 		background: var(--accent);
@@ -121,23 +149,32 @@ import data from "../data/boxoffice.json";
 		background: var(--sage-strong);
 		border-color: var(--sage-strong);
 	}
+	.about {
+		margin-top: 56px;
+		padding-top: 28px;
+		border-top: 1px solid var(--border);
+	}
+	.about h2 {
+		font-size: 1.1rem;
+		color: var(--text-secondary);
+	}
 	.about-list {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 16px;
 	}
 	.about-list li {
-		background: var(--surface-1);
-		border: 1px solid var(--border);
-		border-radius: 12px;
-		padding: 14px 18px;
+		padding: 2px 0 2px 16px;
+		border-left: 3px solid var(--sage);
 		color: var(--text-secondary);
-		font-size: 0.92rem;
+		font-size: 0.9rem;
 	}
 	.about-list strong {
+		display: block;
+		margin-bottom: 2px;
 		color: var(--text-primary);
 	}
 	.about-list a {
@@ -148,9 +185,15 @@ import data from "../data/boxoffice.json";
 		text-decoration: underline;
 	}
 	.about-list code {
-		background: var(--page);
+		background: var(--surface-1);
 		padding: 1px 6px;
 		border-radius: 4px;
 		font-size: 0.88em;
+	}
+	@media (min-width: 720px) {
+		.about-list {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 24px;
+		}
 	}
 </style>

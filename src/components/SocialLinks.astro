@@ -1,0 +1,112 @@
+---
+interface Props {
+	/** "button": pill piene con colore brand (Esplora). "footer": pill sobrie con colore solo in hover. */
+	variant?: "button" | "footer";
+}
+const { variant = "button" } = Astro.props;
+
+const links = [
+	{
+		id: "youtube",
+		label: "YouTube",
+		href: "https://www.youtube.com/@SpacchiCinema96",
+		title: "Canale YouTube",
+	},
+	{
+		id: "github",
+		label: "GitHub",
+		href: "https://github.com/Marco967a/boxoffice-site",
+		title: "Codice sorgente su GitHub",
+	},
+];
+---
+
+<div class:list={["social", variant]}>
+	{links.map((l) => (
+		<a class:list={["link", l.id]} href={l.href} target="_blank" rel="noopener" title={l.title}>
+			{l.id === "youtube" ? (
+				<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+					<path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z" />
+				</svg>
+			) : (
+				<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+					<path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.18 1.82 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z" />
+				</svg>
+			)}
+			<span>{l.label}</span>
+			{variant === "button" && <span aria-hidden="true">&rarr;</span>}
+		</a>
+	))}
+</div>
+
+<style>
+	.social {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+	.link {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		border-radius: 999px;
+		text-decoration: none;
+		font-weight: 600;
+		border: 1px solid transparent;
+		transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+	}
+	.link:hover {
+		transform: translateY(-1px);
+	}
+	.link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	/* Esplora: pill piene, colore di brand sempre visibile */
+	.button .link {
+		padding: 10px 20px;
+		font-size: 0.95rem;
+		color: #fff;
+	}
+	.button .youtube {
+		background: var(--youtube);
+		border-color: var(--youtube);
+	}
+	.button .youtube:hover {
+		background: var(--youtube-strong);
+		border-color: var(--youtube-strong);
+	}
+	/* Grafite in tema chiaro, crema in tema scuro: si inverte con i token */
+	.button .github {
+		background: var(--text-primary);
+		border-color: var(--text-primary);
+		color: var(--page);
+	}
+	.button .github:hover {
+		background: var(--text-secondary);
+		border-color: var(--text-secondary);
+	}
+
+	/* Footer: pill sobrie, colore di brand solo in hover */
+	.footer {
+		gap: 10px;
+	}
+	.footer .link {
+		padding: 7px 16px;
+		font-size: 0.95rem;
+		color: var(--text-primary);
+		background: var(--surface-1);
+		border-color: var(--border);
+	}
+	.footer .youtube:hover {
+		background: var(--youtube);
+		border-color: var(--youtube);
+		color: #fff;
+	}
+	.footer .github:hover {
+		background: var(--text-primary);
+		border-color: var(--text-primary);
+		color: var(--page);
+	}
+</style>

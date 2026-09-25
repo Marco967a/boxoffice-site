@@ -14,21 +14,39 @@ const W = 640;
 const H = 220;
 const PAD_L = 56;
 const PAD_R = 16;
-const PAD_T = 16;
+const PAD_T = 20;
 const PAD_B = 32;
 const plotW = W - PAD_L - PAD_R;
 const plotH = H - PAD_T - PAD_B;
+const TICKS = 4;
 
 const values = data.map((d) => d.total_gross);
-const max = Math.max(...values, 1);
+const rawMax = Math.max(...values, 1);
 const min = 0;
+
+// Scala "pulita": passo tra 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8 × 10^n così i tick cadono su numeri tondi
+const mag = 10 ** Math.floor(Math.log10(rawMax / TICKS));
+const step = ([1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find((m) => m * mag * TICKS >= rawMax) ?? 10) * mag;
+const max = step * TICKS;
 
 const money = new Intl.NumberFormat("it-IT", {
 	style: "currency",
 	currency,
 	maximumFractionDigits: 0,
 });
+const symbol = money.formatToParts(0).find((p) => p.type === "currency")?.value ?? currency;
+const oneDecimal = new Intl.NumberFormat("it-IT", { maximumFractionDigits: 1 });
+const signedPct = new Intl.NumberFormat("it-IT", { style: "percent", maximumFractionDigits: 1, signDisplay: "exceptZero" });
 const dateFmt = new Intl.DateTimeFormat("it-IT", { day: "2-digit", month: "short" });
+const longDateFmt = new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", year: "numeric" });
+
+/** Importo abbreviato per assi ed etichette: 11,4 M€, 350 k€ */
+function short(v: number): string {
+	if (v === 0) return "0";
+	if (v >= 1e6) return `${oneDecimal.format(v / 1e6)} M${symbol}`;
+	if (v >= 1e3) return `${oneDecimal.format(v / 1e3)} k${symbol}`;
+	return `${oneDecimal.format(v)} ${symbol}`;
+}
 
 function x(i: number): number {
 	if (data.length <= 1) return PAD_L + plotW / 2;
@@ -40,34 +58,62 @@ function y(v: number): number {
 
 const points = data.map((d, i) => ({ ...d, cx: x(i), cy: y(d.total_gross) }));
 const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.cx} ${p.cy}`).join(" ");
-const gridSteps = [0, 0.25, 0.5, 0.75, 1];
+const gridSteps = Array.from({ length: TICKS + 1 }, (_, i) => i / TICKS);
+
+const last = points[points.length - 1];
+// Etichetta sopra l'ultimo punto; sotto se non c'è spazio in alto
+const lastLabelY = last && last.cy < PAD_T + 14 ? last.cy + 24 : (last?.cy ?? 0) - 14;
+
+// Dati per il tooltip (letti dallo script più sotto)
+const tipData = points.map((p, i) => {
+	const prev = i > 0 ? points[i - 1].total_gross : 0;
+	return {
+		cx: p.cx,
+		cy: p.cy,
+		date: `Settimana del ${longDateFmt.format(new Date(p.week_start))}`,
+		value: money.format(p.total_gross),
+		meta: `${p.titles} titoli${prev > 0 ? ` · ${signedPct.format((p.total_gross - prev) / prev)} sulla settimana prima` : ""}`,
+	};
+});
 ---
 
-<figure class="viz-root">
-	<svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Andamento incassi weekend nelle ultime settimane">
+<figure class="viz-root" data-trend data-w={W} data-h={H} data-points={JSON.stringify(tipData)}>
+	<svg
+		viewBox={`0 0 ${W} ${H}`}
+		role="group"
+		aria-label="Andamento incassi weekend nelle ultime settimane. Usa le frecce sinistra e destra per scorrere le settimane."
+		tabindex="0"
+	>
 		{gridSteps.map((s) => {
 			const gy = PAD_T + plotH - s * plotH;
 			return (
 				<g>
 					<line x1={PAD_L} x2={W - PAD_R} y1={gy} y2={gy} class="gridline" />
 					<text x={PAD_L - 8} y={gy + 4} class="tick" text-anchor="end">
-						{money.format(max * s)}
+						{short(max * s)}
 					</text>
 				</g>
 			);
 		})}
 		<line x1={PAD_L} x2={W - PAD_R} y1={PAD_T + plotH} y2={PAD_T + plotH} class="baseline" />
 
+		<line class="guide" x1="0" x2="0" y1={PAD_T} y2={PAD_T + plotH} />
+
 		{data.length > 1 && <path d={linePath} class="line" fill="none" />}
 
-		{points.map((p) => (
-			<g>
-				<circle cx={p.cx} cy={p.cy} r="5" class="dot" />
-				<title>
-					{dateFmt.format(new Date(p.week_start))}: {money.format(p.total_gross)} ({p.titles} titoli)
-				</title>
+		{points.map((p, i) => i < points.length - 1 && <circle cx={p.cx} cy={p.cy} r="4.5" class="dot" />)}
+
+		{last && (
+			<g class="last">
+				<circle cx={last.cx} cy={last.cy} r="11" class="halo" />
+				<circle cx={last.cx} cy={last.cy} r="6" class="dot" />
+				<text x={last.cx} y={lastLabelY} class="last-label" text-anchor="end">
+					{short(last.total_gross)}
+				</text>
 			</g>
-		))}
+		)}
+
+		<circle class="ring" cx="0" cy="0" r="8" />
 
 		{points.map((p) => (
 			<text x={p.cx} y={H - 8} class="tick" text-anchor="middle">
@@ -75,6 +121,12 @@ const gridSteps = [0, 0.25, 0.5, 0.75, 1];
 			</text>
 		))}
 	</svg>
+
+	<div class="tip" role="status" aria-live="off">
+		<span class="tip-date"></span>
+		<span class="tip-value"></span>
+		<span class="tip-meta"></span>
+	</div>
 
 	<details class="table-toggle">
 		<summary>Vedi i dati in tabella</summary>
@@ -99,8 +151,105 @@ const gridSteps = [0, 0.25, 0.5, 0.75, 1];
 	</details>
 </figure>
 
+<script>
+	interface TipPoint {
+		cx: number;
+		cy: number;
+		date: string;
+		value: string;
+		meta: string;
+	}
+
+	document.querySelectorAll<HTMLElement>("[data-trend]").forEach((fig) => {
+		const pts = JSON.parse(fig.dataset.points ?? "[]") as TipPoint[];
+		const svg = fig.querySelector<SVGSVGElement>("svg");
+		const tip = fig.querySelector<HTMLElement>(".tip");
+		const guide = fig.querySelector<SVGLineElement>(".guide");
+		const ring = fig.querySelector<SVGCircleElement>(".ring");
+		if (!pts.length || !svg || !tip || !guide || !ring) return;
+
+		const W = Number(fig.dataset.w);
+		const H = Number(fig.dataset.h);
+		let cur = -1;
+
+		function show(i: number) {
+			cur = Math.max(0, Math.min(pts.length - 1, i));
+			const p = pts[cur];
+			tip!.querySelector(".tip-date")!.textContent = p.date;
+			tip!.querySelector(".tip-value")!.textContent = p.value;
+			tip!.querySelector(".tip-meta")!.textContent = p.meta;
+
+			guide!.setAttribute("x1", String(p.cx));
+			guide!.setAttribute("x2", String(p.cx));
+			ring!.setAttribute("cx", String(p.cx));
+			ring!.setAttribute("cy", String(p.cy));
+			fig.classList.add("active");
+
+			// Posizione in pixel rispetto alla figure, con il tooltip tenuto dentro i bordi
+			const s = svg!.getBoundingClientRect();
+			const f = fig.getBoundingClientRect();
+			const px = s.left - f.left + (p.cx / W) * s.width;
+			const py = s.top - f.top + (p.cy / H) * s.height;
+			const half = tip!.offsetWidth / 2 + 4;
+			tip!.style.left = `${Math.max(half, Math.min(f.width - half, px))}px`;
+			tip!.style.top = `${py}px`;
+			tip!.classList.toggle("below", py - tip!.offsetHeight - 18 < 0);
+		}
+
+		function hide() {
+			cur = -1;
+			fig.classList.remove("active");
+		}
+
+		function nearest(e: PointerEvent): number {
+			const s = svg!.getBoundingClientRect();
+			const vx = ((e.clientX - s.left) / s.width) * W;
+			let best = 0;
+			pts.forEach((p, i) => {
+				if (Math.abs(p.cx - vx) < Math.abs(pts[best].cx - vx)) best = i;
+			});
+			return best;
+		}
+
+		svg.addEventListener("pointermove", (e) => {
+			tip.setAttribute("aria-live", "off");
+			show(nearest(e));
+		});
+		svg.addEventListener("pointerdown", (e) => show(nearest(e)));
+		svg.addEventListener("pointerleave", (e) => {
+			if (e.pointerType === "mouse" && document.activeElement !== svg) hide();
+		});
+		// Su touch il tooltip resta finché non si tocca fuori dal grafico
+		document.addEventListener("pointerdown", (e) => {
+			if (!fig.contains(e.target as Node)) hide();
+		});
+
+		svg.addEventListener("focus", () => {
+			if (cur < 0) show(pts.length - 1);
+		});
+		svg.addEventListener("blur", hide);
+		svg.addEventListener("keydown", (e) => {
+			const moves: Record<string, number> = {
+				ArrowLeft: cur - 1,
+				ArrowRight: cur + 1,
+				Home: 0,
+				End: pts.length - 1,
+			};
+			if (!(e.key in moves)) {
+				if (e.key === "Escape") hide();
+				return;
+			}
+			e.preventDefault();
+			tip.setAttribute("aria-live", "polite");
+			show(moves[e.key]);
+		});
+		window.addEventListener("resize", () => cur >= 0 && show(cur));
+	});
+</script>
+
 <style>
 	.viz-root {
+		position: relative;
 		margin: 0;
 		background: var(--surface-1);
 		border: 1px solid var(--border);
@@ -111,6 +260,12 @@ const gridSteps = [0, 0.25, 0.5, 0.75, 1];
 		width: 100%;
 		height: auto;
 		display: block;
+		touch-action: pan-y;
+		border-radius: 6px;
+	}
+	svg:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
 	}
 	.gridline {
 		stroke: var(--gridline);
@@ -131,10 +286,83 @@ const gridSteps = [0, 0.25, 0.5, 0.75, 1];
 		stroke: var(--surface-1);
 		stroke-width: 2;
 	}
+	.halo {
+		fill: var(--series-1);
+		opacity: 0.18;
+	}
+	.last-label {
+		fill: var(--series-1);
+		font-size: 12px;
+		font-weight: 700;
+		paint-order: stroke;
+		stroke: var(--surface-1);
+		stroke-width: 4px;
+		stroke-linejoin: round;
+	}
 	.tick {
 		fill: var(--text-muted);
 		font-size: 10px;
 	}
+	.guide {
+		stroke: var(--baseline);
+		stroke-width: 1;
+		stroke-dasharray: 3 3;
+		opacity: 0;
+	}
+	.ring {
+		fill: none;
+		stroke: var(--series-1);
+		stroke-width: 2;
+		opacity: 0;
+	}
+	.active .guide,
+	.active .ring {
+		opacity: 1;
+	}
+
+	.tip {
+		position: absolute;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		gap: 1px;
+		width: max-content;
+		min-width: 150px;
+		max-width: min(260px, calc(100% - 8px));
+		padding: 8px 12px;
+		border-radius: 10px;
+		background: var(--surface-1);
+		border: 1px solid var(--border);
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+		pointer-events: none;
+		opacity: 0;
+		visibility: hidden;
+		transform: translate(-50%, calc(-100% - 16px));
+		transition: opacity 0.12s ease, visibility 0.12s;
+	}
+	.tip.below {
+		transform: translate(-50%, 16px);
+	}
+	.active .tip {
+		opacity: 1;
+		visibility: visible;
+	}
+	.tip-date {
+		color: var(--text-muted);
+		font-size: 0.75rem;
+	}
+	.tip-value {
+		color: var(--text-primary);
+		font-family: var(--font-display);
+		font-size: 1.1rem;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+	}
+	.tip-meta {
+		color: var(--text-secondary);
+		font-size: 0.78rem;
+	}
+
 	.table-toggle {
 		margin-top: 12px;
 		color: var(--text-secondary);
