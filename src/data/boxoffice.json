@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T20:01:41.725028+00:00",
+  "generated_at": "2026-09-25T10:00:04.857737+00:00",
   "source": "comingsoon",
   "territory": "IT",
   "currency": "EUR",
@@ -7,6 +7,36 @@
   "has_quality_warnings": true,
   "note": "Dati aggregati dal box office italiano (fonte: ComingSoon). Alcune settimane storiche possono mancare o presentare piccole anomalie di fonte.",
   "weekly_trend": [
+    {
+      "week_start": "2026-07-09",
+      "total_gross": 2947197.0,
+      "titles": 20
+    },
+    {
+      "week_start": "2026-07-16",
+      "total_gross": 11420945.0,
+      "titles": 19
+    },
+    {
+      "week_start": "2026-07-23",
+      "total_gross": 12165101.0,
+      "titles": 20
+    },
+    {
+      "week_start": "2026-07-30",
+      "total_gross": 18229291.0,
+      "titles": 18
+    },
+    {
+      "week_start": "2026-08-06",
+      "total_gross": 10346269.0,
+      "titles": 19
+    },
+    {
+      "week_start": "2026-09-10",
+      "total_gross": 5247951.0,
+      "titles": 20
+    },
     {
       "week_start": "2026-09-17",
       "total_gross": 6391944.0,
