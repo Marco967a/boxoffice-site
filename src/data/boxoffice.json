@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-25T10:00:04.857737+00:00",
+  "generated_at": "2026-09-28T10:19:56.200856+00:00",
   "source": "comingsoon",
   "territory": "IT",
   "currency": "EUR",
-  "latest_week": "2026-09-17",
+  "latest_week": "2026-09-24",
   "has_quality_warnings": true,
   "note": "Dati aggregati dal box office italiano (fonte: ComingSoon). Alcune settimane storiche possono mancare o presentare piccole anomalie di fonte.",
   "weekly_trend": [
@@ -41,38 +41,43 @@
       "week_start": "2026-09-17",
       "total_gross": 6391944.0,
       "titles": 20
+    },
+    {
+      "week_start": "2026-09-24",
+      "total_gross": 7876216.0,
+      "titles": 20
     }
   ],
   "top_titles": [
     {
       "rank": 1,
-      "title": "Resident Evil",
-      "weekly_gross": 1440852.0,
-      "screen_count": 345
+      "title": "Avengers: Endgame",
+      "weekly_gross": 2308594.0,
+      "screen_count": 380
     },
     {
       "rank": 2,
-      "title": "Cars: Motori Ruggenti",
-      "weekly_gross": 834400.0,
-      "screen_count": 282
+      "title": "Ultimo - Tutto. Live a Tor Vergata",
+      "weekly_gross": 1397018.0,
+      "screen_count": 313
     },
     {
       "rank": 3,
-      "title": "The Invite - Il Piacere è tutto nostro",
-      "weekly_gross": 560195.0,
-      "screen_count": 403
+      "title": "Heart of the Beast - Nel Profondo Selvaggio",
+      "weekly_gross": 930130.0,
+      "screen_count": 364
     },
     {
       "rank": 4,
-      "title": "Coyote vs. Acme",
-      "weekly_gross": 50461.0,
-      "screen_count": 368
+      "title": "Resident Evil",
+      "weekly_gross": 790662.0,
+      "screen_count": 346
     },
     {
       "rank": 5,
-      "title": "Odissea",
-      "weekly_gross": 482143.0,
-      "screen_count": 279
+      "title": "The Invite - Il Piacere è tutto nostro",
+      "weekly_gross": 395020.0,
+      "screen_count": 374
     }
   ]
 }
