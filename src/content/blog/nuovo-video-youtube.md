@@ -1,19 +1,32 @@
 ---
-title: "Nuovo video sul canale YouTube: arrivano le prossime uscite"
-description: "Pubblicato un nuovo video sul canale YouTube. Da ora un appuntamento mensile dedicato ai film in arrivo al cinema."
+title: "Una nuova generazione di video sul canale YouTube"
+description: "L'11 ottobre esce \"Un autunno promettente al cinema!\", il primo video della nuova serie e il debutto del format Spacchi Traiiler."
 pubDate: 2026-10-01
 ---
 
-È online un **nuovo video** sul nostro [canale YouTube](https://www.youtube.com/@SpacchiCinema96)!
+Il [canale YouTube](https://www.youtube.com/@SpacchiCinema96) cambia pelle: sta per arrivare una **nuova generazione di video**.
 
-## Un video sulle prossime uscite
+## Si parte l'11 ottobre
 
-Il video è dedicato alle **prossime uscite** al cinema: i film in arrivo nelle sale, cosa aspettarsi e cosa tenere d'occhio nelle settimane successive.
+L'**11 ottobre** pubblicheremo il primo video di una **nuova serie**. Non è un semplice restyling: cambiano i format e cambia l'idea di fondo, quella di un intrattenimento a 360 gradi dedicato al cinema.
 
-## Un appuntamento ogni mese
+Il video si intitola **"Un autunno promettente al cinema!"** ed è il format apripista, battezzato **"Spacchi Traiiler"**: una rassegna stampa delle prossime uscite in sala, fino al mese successivo. Sarà il **terzo episodio** del canale.
 
-Il video avrà una **cadenza mensile**: ogni mese pubblicheremo una nuova puntata con le uscite del periodo, così da non perdere nessun titolo importante.
+## Cosa troverete
+
+A rotazione, il canale ospiterà:
+
+- **Recensioni** di film e serie tv
+- **Reaction** a ciò che riguarda il cinema in giro su YouTube
+- **Mini-rassegne tematiche** dedicate a un macroargomento
+- **Video di approfondimento** su autori specifici
+
+Un progetto del genere, nel panorama YouTube italiano, finora non esisteva.
+
+## Calendario editoriale
+
+I video usciranno la **domenica alle 11** e il **lunedì alle 12**. Orari e giorni potrebbero cambiare di volta in volta, ma sono dettagli.
 
 ## Come restare aggiornati
 
-Iscrivetevi al [canale YouTube](https://www.youtube.com/@SpacchiCinema96) per non perdere le prossime puntate. Per i dati sugli incassi, la classifica e il trend storico, continuate a seguire il [box office](/projects/boxoffice), aggiornato ogni settimana.
+Iscrivetevi al [canale YouTube](https://www.youtube.com/@SpacchiCinema96) per non perdere il primo video dell'11 ottobre. Per i dati sugli incassi, la classifica e il trend storico, continuate a seguire il [box office](/projects/boxoffice), aggiornato ogni settimana.
