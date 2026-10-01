@@ -1,6 +1,6 @@
 ---
 title: "Una nuova generazione di video sul canale YouTube"
-description: "L'11 ottobre esce \"Un autunno promettente al cinema!\", il primo video della nuova serie e il debutto del format Spacchi Traiiler."
+description: "L'11 ottobre esce \"Un autunno promettente al cinema!\", il primo video della nuova serie e il debutto del format Spacchi Trailer."
 pubDate: 2026-10-01
 ---
 
@@ -10,7 +10,7 @@ Il [canale YouTube](https://www.youtube.com/@SpacchiCinema96) cambia pelle: sta 
 
 L'**11 ottobre** pubblicheremo il primo video di una **nuova serie**. Non è un semplice restyling: cambiano i format e cambia l'idea di fondo, quella di un intrattenimento a 360 gradi dedicato al cinema.
 
-Il video si intitola **"Un autunno promettente al cinema!"** ed è il format apripista, battezzato **"Spacchi Traiiler"**: una rassegna stampa delle prossime uscite in sala, fino al mese successivo. Sarà il **terzo episodio** del canale.
+Il video si intitola **"Un autunno promettente al cinema!"** ed è il format apripista, battezzato **"Spacchi Trailer"**: una rassegna stampa delle prossime uscite in sala, fino al mese successivo. Sarà il **terzo episodio** del canale.
 
 ## Cosa troverete
 
