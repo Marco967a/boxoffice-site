@@ -5,7 +5,7 @@ Astro, statico, nessun backend.
 
 ## Struttura
 
-- `/` — hub, tile progetti, link a portfolio e YouTube
+- `/` — hub, tile progetti, link a portfolio
 - `/projects/boxoffice` — dashboard (KPI + 2 grafici) da `src/data/boxoffice.json`
 - `/blog` — articoli in `src/content/blog/*.md` (frontmatter: `title`, `pubDate`, `description?`)
 
