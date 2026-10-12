@@ -1,17 +1,12 @@
 {
-  "generated_at": "2026-10-05T10:00:20.161082+00:00",
+  "generated_at": "2026-10-12T10:33:06.706169+00:00",
   "source": "comingsoon",
   "territory": "IT",
   "currency": "EUR",
-  "latest_week": "2026-10-01",
+  "latest_week": "2026-10-08",
   "has_quality_warnings": true,
   "note": "Dati aggregati dal box office italiano (fonte: ComingSoon). Alcune settimane storiche possono mancare o presentare piccole anomalie di fonte.",
   "weekly_trend": [
-    {
-      "week_start": "2026-07-16",
-      "total_gross": 11420945.0,
-      "titles": 19
-    },
     {
       "week_start": "2026-07-23",
       "total_gross": 12165101.0,
@@ -46,38 +41,43 @@
       "week_start": "2026-10-01",
       "total_gross": 5484651.0,
       "titles": 20
+    },
+    {
+      "week_start": "2026-10-08",
+      "total_gross": 6586179.0,
+      "titles": 20
     }
   ],
   "top_titles": [
     {
       "rank": 1,
-      "title": "Naza",
-      "weekly_gross": 1219051.0,
-      "screen_count": 414
+      "title": "Mammina",
+      "weekly_gross": 1982148.0,
+      "screen_count": 314
     },
     {
       "rank": 2,
-      "title": "Heart of the Beast - Nel Profondo Selvaggio",
-      "weekly_gross": 738353.0,
-      "screen_count": 389
+      "title": "Naza",
+      "weekly_gross": 846790.0,
+      "screen_count": 556
     },
     {
       "rank": 3,
-      "title": "Verity",
-      "weekly_gross": 661377.0,
-      "screen_count": 313
+      "title": "L'Estranea",
+      "weekly_gross": 798068.0,
+      "screen_count": 427
     },
     {
       "rank": 4,
-      "title": "Digger",
-      "weekly_gross": 532945.0,
-      "screen_count": 494
+      "title": "Heart of the Beast - Nel Profondo Selvaggio",
+      "weekly_gross": 565288.0,
+      "screen_count": 318
     },
     {
       "rank": 5,
-      "title": "Avengers: Endgame Extra",
-      "weekly_gross": 465753.0,
-      "screen_count": 326
+      "title": "Verity",
+      "weekly_gross": 514748.0,
+      "screen_count": 338
     }
   ]
 }
