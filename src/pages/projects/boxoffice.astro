@@ -46,7 +46,7 @@ const generatedFmt = new Intl.DateTimeFormat("it-IT", { dateStyle: "medium", tim
 		<p>{data.note}</p>
 		<p class="meta">
 			Fonte: {data.source} · Territorio: {data.territory} · Ultimo aggiornamento:{" "}
-			{generatedFmt.format(new Date(data.generated_at))}
+			<time datetime={data.generated_at}>{generatedFmt.format(new Date(data.generated_at))}</time>
 		</p>
 	</section>
 </Base>
