@@ -1,17 +1,12 @@
 {
-  "generated_at": "2026-10-12T10:33:06.706169+00:00",
+  "generated_at": "2026-10-23T12:07:01.042818+00:00",
   "source": "comingsoon",
   "territory": "IT",
   "currency": "EUR",
-  "latest_week": "2026-10-08",
+  "latest_week": "2026-10-15",
   "has_quality_warnings": true,
   "note": "Dati aggregati dal box office italiano (fonte: ComingSoon). Alcune settimane storiche possono mancare o presentare piccole anomalie di fonte.",
   "weekly_trend": [
-    {
-      "week_start": "2026-07-23",
-      "total_gross": 12165101.0,
-      "titles": 20
-    },
     {
       "week_start": "2026-07-30",
       "total_gross": 18229291.0,
@@ -46,38 +41,43 @@
       "week_start": "2026-10-08",
       "total_gross": 6586179.0,
       "titles": 20
+    },
+    {
+      "week_start": "2026-10-15",
+      "total_gross": 6831956.0,
+      "titles": 20
     }
   ],
   "top_titles": [
     {
       "rank": 1,
-      "title": "Mammina",
-      "weekly_gross": 1982148.0,
-      "screen_count": 314
+      "title": "Je So' Pazzo",
+      "weekly_gross": 1533139.0,
+      "screen_count": 390
     },
     {
       "rank": 2,
-      "title": "Naza",
-      "weekly_gross": 846790.0,
-      "screen_count": 556
+      "title": "Mammina",
+      "weekly_gross": 853141.0,
+      "screen_count": 360
     },
     {
       "rank": 3,
       "title": "L'Estranea",
-      "weekly_gross": 798068.0,
-      "screen_count": 427
+      "weekly_gross": 813668.0,
+      "screen_count": 506
     },
     {
       "rank": 4,
-      "title": "Heart of the Beast - Nel Profondo Selvaggio",
-      "weekly_gross": 565288.0,
-      "screen_count": 318
+      "title": "Primetime",
+      "weekly_gross": 450647.0,
+      "screen_count": 298
     },
     {
       "rank": 5,
-      "title": "Verity",
-      "weekly_gross": 514748.0,
-      "screen_count": 338
+      "title": "Street Fighter",
+      "weekly_gross": 387249.0,
+      "screen_count": 253
     }
   ]
 }
